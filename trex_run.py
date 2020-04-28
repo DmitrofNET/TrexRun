@@ -3,11 +3,9 @@ import math
 
 WIDTH = 688
 HEIGHT = 645
-
-enemy_start = 688
-
 FLOOR = 440
 
+enemy_start = 688
 cloud_start = 688
 
 trex = Actor("idle", (125, FLOOR))
@@ -22,11 +20,8 @@ fly = ["enemy1", "enemy2"]
 
 trex.above_ground = 0
 frames_per_image = 6
-
 x,e = 0,0
-
 score = 1
-
 trex_status = "PLAY"
 
 speed = 10
@@ -87,15 +82,14 @@ def update():
         trex.y += trex.above_ground
         if(trex.y > FLOOR):
             trex.y = FLOOR
-           
+        elif trex.y < FLOOR-65:
+            trex.y = FLOOR-65
         
         enemy_start -= 0.6
         enemy1.x = enemy_start
         
-           
         if enemy1.right < 59:
-            fly.left = 544
-            enemy1.image = random.choice(fly)
+            enemy1.left = 544
         
         enemy1.image = fly[e // frames_per_image]
         e +=1
@@ -112,6 +106,7 @@ def update():
             LIVES -= 1/7.5
         if LIVES <1:
             trex_status = "dead"
+
 def on_mouse_down(pos):
     global trex_status,LIVES,score
     if restart.collidepoint(pos):
@@ -120,6 +115,10 @@ def on_mouse_down(pos):
         score = 0
         trex_status = "PLAY"
 
+def trex_jump():
+    trex.above_ground = JUMP
+    
 def on_key_down():
     if keyboard.SPACE:
-        trex.above_ground = JUMP
+        clock.schedule_unique(trex_jump, 0.2)
+        
